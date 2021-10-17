@@ -11,7 +11,7 @@ void createMatrix1()
     int nrows = 480, ncols = 640;
     cv::Mat m1_8u;
     m1_8u.create(nrows, ncols, CV_8UC1); // two-channel matrix with 8bit unsigned elements
-    m1_8u.setTo(cv::Scalar(255));        // white
+    m1_8u.setTo(cv::Scalar(0));        // white 255->0 test
 
     // STUDENT TASK :
     // Create a variable of type cv::Mat* named m3_8u which has three channels with a
