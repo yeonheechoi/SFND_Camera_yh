@@ -16,7 +16,11 @@ void changePixels()
     for (int r = 230; r < 250; r++)
     {
         // STUDENT TASK : loop over all columns and set matrix elements to 255
-
+        // all columns means from o to 640, r start from 230 to 250 -> 230 ~ 250 rows and 0 ~ 640 Colums white
+        for (int c = 0; c < 640; c++)
+        {
+            m1_8u.at<int>(r, c) = 255;
+        }
     }
 
     // show result
