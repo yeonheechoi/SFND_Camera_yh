@@ -15,7 +15,7 @@ void loadImage3()
     {
         // create file name
         ostringstream imgNumber;                   // #include <sstream>
-        imgNumber << setfill('0') << setw(4) << i; // #include <iomanip>
+        imgNumber << setfill('0') << setw(4) << i; // #include <iomanip>, set 0 -> 4 times '0000' + 'i'
         string filename = "../images/img" + imgNumber.str() + ".jpg";
 
         // load image and store it into a vector
@@ -27,10 +27,14 @@ void loadImage3()
     // display images from the vector
     string windowName = "First steps in OpenCV";
     cv::namedWindow(windowName, 1); // create window
-    for (auto it = imgList.begin(); it != imgList.end(); ++it)
+    for (auto it = imgList.begin(); it != imgList.end(); ++it) // auto it: 초기 값에 따라 타입을 자동으로 지정
     {
-
         // STUDENT TASK : Prevent image 7 from being displayed
+            if (it == imgList.begin()+2) 
+            {
+                continue;
+            }
+
 
         // display image
         cv::imshow(windowName, *it);
