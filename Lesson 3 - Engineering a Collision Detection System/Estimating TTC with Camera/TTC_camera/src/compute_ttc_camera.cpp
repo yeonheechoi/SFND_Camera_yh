@@ -35,7 +35,7 @@ void computeTTCCamera(std::vector<cv::KeyPoint> &kptsPrev, std::vector<cv::KeyPo
             cv::KeyPoint kpInnerPrev = kptsPrev.at(it2->queryIdx);
 
             // compute distances and distance ratios
-            double distCurr = cv::norm(kpOuterCurr.pt - kpInnerCurr.pt);
+            double distCurr = cv::norm(kpOuterCurr.pt - kpInnerCurr.pt); //norm 은 벡터의 길이 혹은 크기를 측정하는 함수
             double distPrev = cv::norm(kpOuterPrev.pt - kpInnerPrev.pt);
 
             if (distPrev > std::numeric_limits<double>::epsilon() && distCurr >= minDist)
@@ -55,12 +55,55 @@ void computeTTCCamera(std::vector<cv::KeyPoint> &kptsPrev, std::vector<cv::KeyPo
     }
 
     // compute camera-based TTC from distance ratios
-    double meanDistRatio = std::accumulate(distRatios.begin(), distRatios.end(), 0.0) / distRatios.size();
+    /*double meanDistRatio = std::accumulate(distRatios.begin(), distRatios.end(), 0.0) / distRatios.size(); // (누적합 / 전체 갯수)
 
     double dT = 1 / frameRate;
-    TTC = -dT / (1 - meanDistRatio);
+    TTC = -dT / (1 - meanDistRatio); */
 
     // TODO: STUDENT TASK (replacement for meanDistRatio)
+    /*
+    double medianDistRatio;
+    if (distRatios.size()% 2 == 0) // if even
+    {
+        auto m1_it = distRatios.begin() + distRatios.size()/2 -1 ;
+        auto m2_it = distRatios.begin() + distRatios.size()/2 ;
+
+        std::nth_element(distRatios.begin(),m1_it,distRatios.end() );
+        auto e1 = *m1_it;
+
+        std::nth_element(distRatios.begin(),m2_it,distRatios.end() );
+        auto e2 = *m2_it;
+
+        medianDistRatio = (e1 + e2)/2;
+    }
+    else
+    {
+        auto median_it = distRatios.begin() + distRatios.size()/2;
+        std::nth_element(distRatios.begin(),median_it,distRatios.end() );
+        medianDistRatio = *median_it;
+    }
+    double dT = 1 / frameRate;
+    TTC = -dT / (1 - medianDistRatio);  
+    }*/
+    double medianDistRatio;
+    if (distRatios.size()% 2 == 0) // if even
+    {
+        std::nth_element(distRatios.begin(),distRatios.begin() + distRatios.size()/2 -1,distRatios.end() );
+        auto m1 = distRatios[distRatios.size()/2 -1];
+
+        std::nth_element(distRatios.begin(),distRatios.begin() + distRatios.size()/2,distRatios.end() );
+        auto m2 = distRatios[distRatios.size()/2];
+
+        medianDistRatio = (m1 + m2)/2;
+    }
+    else
+    {
+        std::nth_element(distRatios.begin(),distRatios.begin() + distRatios.size()/2,distRatios.end() );
+        medianDistRatio = distRatios[distRatios.size()/2];
+    }
+    double dT = 1 / frameRate;
+    TTC = -dT / (1 - medianDistRatio);  
+    
 }
 
 int main()
