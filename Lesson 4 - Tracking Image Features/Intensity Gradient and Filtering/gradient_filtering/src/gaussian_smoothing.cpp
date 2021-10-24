@@ -18,7 +18,17 @@ void gaussianSmoothing1()
                             7, 26, 41, 26, 7,
                             4, 16, 26, 16, 4,
                             1, 4, 7, 4, 1};
+
+    // slove Gaussian smoothing code error
+    for (int i = 0; i < 25; i++)
+    {
+        auto gauss_sum = accumulate(gauss_data, gauss_data+25, 0);
+        gauss_data[i] /= gauss_sum;
+    }
+
     cv::Mat kernel = cv::Mat(5, 5, CV_32F, gauss_data);
+
+
 
     // apply filter
     cv::Mat result;

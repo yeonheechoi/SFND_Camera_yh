@@ -28,7 +28,7 @@ void magnitudeSobel()
 
     // compute magnitude image based on the equation presented in the lesson 
     // ToDo : Add your code here
-    
+    cv::Mat magnitude;
 
     // show result
     string windowName = "Gaussian Blurring";
