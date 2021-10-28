@@ -27,14 +27,25 @@ void gradientSobel()
                         -1, 0, +1};
     cv::Mat kernel_x = cv::Mat(3, 3, CV_32F, sobel_x);
 
+    float sobel_y[9] = {-1, -2, -1,
+                        0, 0, 0, 
+                        +1, +2, +1};
+    cv::Mat kernel_y = cv::Mat(3, 3, CV_32F, sobel_y);
+
+    //cv::Mat kernel;
+    //kernel = (abs(kernel_x) + abs(kernel_y))*1/2;
+
     // apply filter
     cv::Mat result_x;
+    cv::Mat result_xy;
     cv::filter2D(imgGray, result_x, -1, kernel_x, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
+    cv::filter2D(result_x, result_xy, -1, kernel_y, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
 
     // show result
-    string windowName = "Sobel operator (x-direction)";
+    //string windowName = "Sobel operator (x-direction)";
+    string windowName = "Sobel operator";
     cv::namedWindow( windowName, 1 ); // create window 
-    cv::imshow(windowName, result_x);
+    cv::imshow(windowName, result_xy);
     cv::waitKey(0); // wait for keyboard input before continuing
 }
 
