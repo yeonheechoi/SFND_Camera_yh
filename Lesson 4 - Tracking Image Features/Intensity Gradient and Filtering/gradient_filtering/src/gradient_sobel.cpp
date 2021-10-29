@@ -40,10 +40,6 @@ void gradientSobel()
     cv::filter2D(imgGray, result_x, -1, kernel_x, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
     cv::filter2D(imgGray, result_y, -1, kernel_y, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT); 
 
-    //cv::Mat abs_x, abs_y, result;
-    //abs_x = cv::abs(kernel_x);
-    //abs_y = cv::abs(kernel_y);
-    //cv::addWeighted(abs_x, 0.5, abs_y, 0.5, 0, result);
     cv::Mat result;
     cv::addWeighted(result_x, 0.5, result_y, 0.5, 0, result);
 
