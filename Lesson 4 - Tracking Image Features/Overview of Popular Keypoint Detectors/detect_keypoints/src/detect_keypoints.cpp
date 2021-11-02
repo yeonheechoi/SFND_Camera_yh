@@ -46,6 +46,7 @@ void detKeypoints1()
     cv::namedWindow(windowName, 1);
     imshow(windowName, visImage);
 
+    
     // TODO: use the OpenCV library to add the FAST detector
     // in addition to the already implemented Shi-Tomasi 
     // detector and compare both algorithms with regard to 
