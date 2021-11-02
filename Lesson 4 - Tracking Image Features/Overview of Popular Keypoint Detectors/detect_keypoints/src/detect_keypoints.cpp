@@ -46,12 +46,31 @@ void detKeypoints1()
     cv::namedWindow(windowName, 1);
     imshow(windowName, visImage);
 
-    
+
     // TODO: use the OpenCV library to add the FAST detector
     // in addition to the already implemented Shi-Tomasi 
     // detector and compare both algorithms with regard to 
     // (a) number of keypoints, (b) distribution of 
     // keypoints over the image and (c) processing speed.
+    int threshold = 30; // difference between intensity of the central pixel and pixels of a circle around this pixel
+    bool setNMS = true; // Non-Maxima Suppression on keypoints
+    cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16; 
+    // TYPE_5_8 = 0 (8 개 중 5 개 연속), TYPE_7_12 = 1 (12개 중 7개 연속), TYPE_9_16 = 2 (16 개 중 9개 연속 (default))
+    cv::Ptr<cv::FeatureDetector> detector = cv::FastFeatureDetector::create(threshold, setNMS, type);
+
+    vector<cv::KeyPoint> kptsFAST;
+    t = (double)cv::getTickCount(); // 측정 시작 시간
+    detector->detect(imgGray, kptsFAST);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    // getTickCount: 측정 시간 s, getTickFrequency: 시스템 틱 주파수 (1초 동안 발생하는 틱 횟수), 측정시간/시스템 틱 주파수 = 실제 연산 시간 (컴퓨터 성능에 따라 측정 시간이 다르기 때문에)
+    cout << "FAST with n= " << kptsFAST.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+    cv::Mat FAST_Image = img.clone();
+    cv::drawKeypoints(img, kptsFAST, FAST_Image, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    windowName = "FAST Results";
+    cv::namedWindow(windowName, 2);
+    imshow(windowName, FAST_Image);
+    cv::waitKey(0);
 }
 
 int main()
