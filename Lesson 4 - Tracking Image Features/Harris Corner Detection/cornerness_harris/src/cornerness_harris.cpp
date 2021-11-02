@@ -50,17 +50,19 @@ void cornernessHarris()
             int response = (int)dst_norm.at<float>(r, c);
             if (response > minResponse)
             { 
-                cv::KeyPoint newKeyPoint;
-                newKeyPoint.pt = cv::Point2f(r, c);
-                newKeyPoint.size = 2 * apertureSize;
-                newKeyPoint.response = response;
+                cv::KeyPoint newKeyPoint; //newKeypoint: 특징점 정보를 담는 객체 (minResponse 이상인 keypoint 들만 모음)
+                newKeyPoint.pt = cv::Point2f(r, c); //.pt: 특징점 좌표(x, y), float 타입으로 정수 변환 필요
+                newKeyPoint.size = 2 * apertureSize; //.size: 의미 있는 특징점 이웃의 반지름
+                newKeyPoint.response = response; //특징점 반응 강도 (추출기에 따라 다름)
+
 
                 // perform non-maximum suppression (NMS) in local neighbourhood around new key point
                 bool Overlap = false;
                 for (auto it = keypoints.begin(); it != keypoints.end(); ++it)
                 {
                     double kptOverlap = cv::KeyPoint::overlap(newKeyPoint, *it);
-                    if (kptOverlap > maxOverlap)
+                    //This method computes overlap for pair of keypoints. Overlap is the ratio between area of keypoint regions' intersection and area of keypoint regions' union (considering keypoint region as circle). If they don't overlap, we get zero. If they coincide at same location with same size, we get 1.
+                    if (kptOverlap > maxOverlap) //newKeyPoint 랑 *it 이 영역이 겹치지 않으면 0이 나오고 그렇지 않으면 ~ 1 값이 나오게 되기 때문에 maxOverlap (=0) 보다 크다는 말은 겹치는 영역이 있다는 의미
                     {
                         Overlap = true;
                         if (newKeyPoint.response > (*it).response)
@@ -80,9 +82,10 @@ void cornernessHarris()
 
     string windowName = "Harris Corner Detection Results";
     cv::namedWindow(windowName, 5);
-    cv::Mat visImage = dst_norm_scaled.clone();
-    cv::drawKeypoints(dst_norm_scaled, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    cv::imshow(windowName, visImage);
+    cv::Mat Result_Image = dst_norm_scaled.clone();
+    cv::drawKeypoints(dst_norm_scaled, keypoints, Result_Image, cv::Scalar::all(-1), cv::DrawMatchesFlags::DEFAULT); 
+    // (입력 이미지, 표시할 특징점 리스트, 특징점이 그려진 결과 이미지, 표시할 생상 (default:랜덤), 표시할 방법(cv2.DRAW_MATCHES_FLAGS_DEFAULT: 좌표 중심에 동그라미만 그림(default), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS: 동그라미의 크기를 size와 angle을 반영해서 그림))
+    cv::imshow(windowName, Result_Image);
     cv::waitKey(0);
 }
 
