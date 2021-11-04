@@ -17,6 +17,8 @@ void descKeypoints1()
     cv::cvtColor(img, imgGray, cv::COLOR_BGR2GRAY);
 
     // BRISK detector / descriptor
+    // Binary Robust Invariant Scalabe Keypoints: FAST 또는 AGIST 를 사용하여 스케일 공간에서 피라미드 기반으로 특징점 검출
+    // descriptor 계산은 특징점 근처에서 동심원 기반의 샘플링 패턴을 이용하여 이진 descriptor 계산 
     cv::Ptr<cv::FeatureDetector> detector = cv::BRISK::create();
     vector<cv::KeyPoint> kptsBRISK;
 
@@ -44,6 +46,30 @@ void descKeypoints1()
     // time for both steps and compare both BRISK and SIFT
     // with regard to processing speed and the number and 
     // visual appearance of keypoints.
+    // SIFT: Scale Invariant Feature Transform 의 약자, 크기 불변 특징 변환
+    // 특징점을 부근 부분 영상으로부터 그래디언트 방향 히스토그램을 추출하여 기술자로 사용
+    
+    detector = cv::SIFT::create();
+    vector<cv::KeyPoint> kptsSIFT;
+
+    t = (double)cv::getTickCount();
+    detector->detect(imgGray, kptsSIFT);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "SIFT detector with n= " << kptsSIFT.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+    descriptor = cv::SiftDescriptorExtractor::create();
+    cv::Mat descSIFT;
+    t = (double)cv::getTickCount();
+    descriptor->compute(imgGray, kptsSIFT, descSIFT);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "SIFT descriptor in " << 1000 * t / 1.0 << " ms" << endl;
+
+    visImage = img.clone();
+    cv::drawKeypoints(img, kptsSIFT, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    windowName = "SIFT Results";
+    cv::namedWindow(windowName, 2);
+    imshow(windowName, visImage);
+    cv::waitKey(0);
 
 }
 
