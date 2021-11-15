@@ -34,10 +34,12 @@ void showLidarTopview()
         float zw = (*it).z; // world position in m with y facing left from sensor
         // 2. Remove all Lidar points on the road surface while preserving 
         // measurements on the obstacles in the scene.
+        
         if(zw > -1.40){
-        // TODO: 
+        
         // 1. Change the color of the Lidar points such that 
         // X=0.0m corresponds to red while X=20.0m is shown as green.
+            
             float val = it->x;
             float maxVal = worldSize.height;
             int red = min(255, (int)(255 * abs((val - maxVal) / maxVal)));
