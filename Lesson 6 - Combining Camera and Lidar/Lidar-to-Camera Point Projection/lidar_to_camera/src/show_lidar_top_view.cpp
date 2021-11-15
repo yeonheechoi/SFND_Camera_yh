@@ -36,7 +36,6 @@ void showLidarTopview()
         // measurements on the obstacles in the scene.
         
         if(zw > -1.40){
-        
         // 1. Change the color of the Lidar points such that 
         // X=0.0m corresponds to red while X=20.0m is shown as green.
             
